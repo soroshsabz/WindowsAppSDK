@@ -7,7 +7,7 @@ set PrereleaseArg=
 
 setlocal enableextensions enabledelayedexpansion
 set _ARGS=
-set VsVersion=2022
+set VsVersion=2019
 if exist %temp%\WinUI.PreserveContext.marker del %temp%\WinUI.PreserveContext.marker
 :ParseArgs
 if "%1" EQU "" (

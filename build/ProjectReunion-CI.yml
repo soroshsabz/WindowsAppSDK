@@ -90,7 +90,7 @@ jobs:
 
 - job: BuildMRT
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'windows-2019'
   strategy:
     maxParallel: 10
     matrix:
@@ -137,7 +137,7 @@ jobs:
     - BuildMRT
   condition: in(dependencies.BuildMRT.result, 'Succeeded')
   pool:
-    vmImage: 'windows-latest'
+    vmImage: 'windows-2019'
   steps:
   - template: publish-mrt.yml
 
