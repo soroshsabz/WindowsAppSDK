@@ -7,7 +7,7 @@
     </Dependency>
   </ProductDependencies>
   <ToolsetDependencies>
-    <Dependency Name="Microsoft.Windows.CsWinRT" Version="1.6.5-prerelease.220713.9">
+    <Dependency Name="Microsoft.Windows.CsWinRT" Version="2.0.0-prerelease.220815.1">
       <Uri>https://github.com/microsoft/CsWinRT</Uri>
       <Sha>9b4a4df6144ac1f1642307046cc2468ce4664b0a</Sha>
     </Dependency>
