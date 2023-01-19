@@ -30,6 +30,18 @@ steps:
     logProjectEvents: false
 
 - ${{ if eq(parameters.runSDLBinaryAnalysis, 'true') }}:
+  # alam start
+  - script: |
+      dir /s $(Build.SourcesDirectory)
+
+  - task: CopyFiles@2
+    displayName: 'Copy binlog files to parent'
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)\BuildOutput'
+      Contents: |
+        *.binlog
+      TargetFolder: '$(Build.SourcesDirectory)'
+  # alam end
   - template: WindowsAppSDK-BinaryAnalysis-steps.yml
     parameters:
       outputDirectory: '$(Build.SourcesDirectory)\buildoutput'
