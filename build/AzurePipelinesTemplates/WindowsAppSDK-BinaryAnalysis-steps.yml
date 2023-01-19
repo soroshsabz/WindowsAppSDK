@@ -32,22 +32,30 @@ steps:
         ob_sdl_binskim_break: false 
       globalsdl:
         tsa:
-          enabled: true
+          # alam start
+          # enabled: true
+          enabled: false
+          # alam end
         binskim:
           enabled: true
           break: true
           # The following serves as an include/exclude example (*untested*).
           # analyzeTargetGlob: '+:file|**\bin\**\*.dll;-:file|**\Microsoft.WindowsAppRuntime.Insights.Resource.dll'
+        # This SDL template is currently invoking PreFast's SDLNativeRules@2 task, which does not seem to support TSA auto bug
+        # filing. Once the template is upgrade to invoke the SDLNativeRules@3 task, TSA auto bug filing is expected to happen.
         prefast:
           ${{ if ne(parameters.enablePREFast, true) }}:
             enabled: false
           ${{ if eq(parameters.enablePREFast, true) }}:
             enabled: true
+          # alam start
           # ToDo: set the following to true once pre-existing errors are resolved.
-          break: false
+          # break: false        
+          break: true
         # The following scans we already did during in the SourceAnalysis job, not repeating here.
         # ToDo: Consider disabling Antimalware also, but how?
-        credscan:
-          enabled: false
-        policheck:
-          enabled: false
+        #credscan:
+        #  enabled: false
+        #policheck:
+        #  enabled: false
+        # alam end
