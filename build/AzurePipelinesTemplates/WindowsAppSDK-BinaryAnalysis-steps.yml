@@ -32,6 +32,9 @@ steps:
             enabled: true
           # ToDo: set the following to true once pre-existing errors are resolved.
           break: false
+          # alam start
+          rulesetName: Required
+          # alam end
         # The following scans we already did during in the SourceAnalysis job, not repeating here.
         # ToDo: Consider disabling Antimalware also, but how?
         credscan:
