@@ -35,7 +35,7 @@ steps:
           # alam start
           #rulesetName: Required
           rulesetName: Recommended
-          excludedPath: 'test;installer\test;dev\MRTCore\mrt\Core\unittests'
+          excludedPath: 'test;installer\test;dev\MRTCore\mrt\Core\unittests;dev\MRTCore\mrt\mrm\UnitTests'
           # alam end
         # The following scans we already did during in the SourceAnalysis job, not repeating here.
         # ToDo: Consider disabling Antimalware also, but how?
