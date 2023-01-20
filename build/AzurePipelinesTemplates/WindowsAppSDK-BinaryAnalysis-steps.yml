@@ -14,6 +14,17 @@ steps:
       versionSpec: '>=8.6.0'
 
   # alam start
+  - script: |
+      dir /s $(Build.SourcesDirectory)
+
+  - task: CopyFiles@2
+    displayName: 'Copy binlog files to parent'
+    inputs:
+      SourceFolder: '$(Build.SourcesDirectory)\BuildOutput'
+      Contents: |
+        *.binlog
+      TargetFolder: '$(Build.SourcesDirectory)'
+
   - task: SDLNativeRules@3
     displayName: 'Guardian: PreFast@3'
     env:
