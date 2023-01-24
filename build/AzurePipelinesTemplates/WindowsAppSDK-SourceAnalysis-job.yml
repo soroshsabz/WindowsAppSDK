@@ -1,62 +1,40 @@
-parameters:
-  # Caller optionally overrides these.
-  - name: outputDirectory
-    type: string
-    default: $(Build.SourcesDirectory)\BuildOutput
-  - name: enablePREFast
-    type: boolean
-    default: true
+p# This job is expected to run in parallel with the build task.
 
-steps:
+jobs:
+- job: SDLSourcesScanning
+  pool: 
+    name: $(buildPool)
+  steps:
+  # Required by the Packaged ES SDL Templates.
+  - checkout: self
+    persistCredentials: true
+
   - task: NodeTool@0
     displayName: 'Use Node >=8.6.0'
     inputs:
       versionSpec: '>=8.6.0'
 
-  # alam start
-  - ${{ if eq(parameters.enablePREFast, true) }}:
-    - task: SDLNativeRules@3
-      displayName: 'Guardian: PreFast@3'
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-      continueOnError: true
-      inputs:
-        publishXML: false
-        userProvideBuildInfo: auto
-        rulesetName: Required
-        #excludedPaths: |
-        #  s\node_modules
-        #  s\packages\ExperienceExtensions\windows\packages
-  # alam end
-
-  - template: v2/Steps/PackageES/Windows.SDL.Binary.Analysis.OS.Undocked.yml@templates_onebranch
+  - template: v2/Steps/PackageES/Windows.SDL.Sources.Analysis.OS.Undocked.yml@templates_onebranch
     parameters:
-      variables:
-        ob_outputDirectory: ${{ parameters.outputDirectory }}
-        ob_sdl_binskim_scanOutputDirectoryOnly: true
-        ob_sdl_binskim_break: false 
       globalsdl:
-        binskim:
-          enabled: true
-          break: true
-          # The following serves as an include/exclude example (*untested*).
-          # analyzeTargetGlob: '+:file|**\bin\**\*.dll;-:file|**\Microsoft.WindowsAppRuntime.Insights.Resource.dll'
-        prefast:
-          # alam start
-          #${{ if ne(parameters.enablePREFast, true) }}:
-          #  enabled: false
-          #${{ if eq(parameters.enablePREFast, true) }}:
-          #  enabled: true
-          # ToDo: set the following to true once pre-existing errors are resolved.
-          # break: false
-          #rulesetName: Required
-          #rulesetName: Recommended
-          #excludedPath: 'test;installer\test;dev\MRTCore\mrt\Core\unittests;dev\MRTCore\mrt\mrm\UnitTests'
-          enabled: false
-          # alam end
-        # The following scans we already did during in the SourceAnalysis job, not repeating here.
-        # ToDo: Consider disabling Antimalware also, but how?
-        credscan:
-          enabled: false
-        policheck:
-          enabled: false
+        tsa:
+          # Not filing bugs for issues found by the scans just yet.
+          #enabled: true    
+          enabled: false    
+        codeql:
+          tsandjs:
+            enabled: true
+            break: true
+          python:
+            enabled: true
+            break: true
+          psscriptanalyzer:
+            enable: true
+            break: true
+          credscan:
+            enable: true
+            break: true
+          policheck:       
+            # ToDo: Once pre-existing issues have been resolved, set break to true.
+            enable: true
+            break: false
