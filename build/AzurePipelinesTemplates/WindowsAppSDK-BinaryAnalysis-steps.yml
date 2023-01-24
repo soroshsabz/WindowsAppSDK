@@ -13,6 +13,22 @@ steps:
     inputs:
       versionSpec: '>=8.6.0'
 
+  # alam start
+  - ${{ if eq(parameters.enablePREFast, true) }}:
+    - task: SDLNativeRules@3
+      displayName: 'Guardian: PreFast@3'
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      continueOnError: true
+      inputs:
+        publishXML: false
+        userProvideBuildInfo: auto
+        rulesetName: Required
+        #excludedPaths: |
+        #  s\node_modules
+        #  s\packages\ExperienceExtensions\windows\packages
+  # alam end
+
   - template: v2/Steps/PackageES/Windows.SDL.Binary.Analysis.OS.Undocked.yml@templates_onebranch
     parameters:
       variables:
@@ -26,20 +42,21 @@ steps:
           # The following serves as an include/exclude example (*untested*).
           # analyzeTargetGlob: '+:file|**\bin\**\*.dll;-:file|**\Microsoft.WindowsAppRuntime.Insights.Resource.dll'
         prefast:
-          ${{ if ne(parameters.enablePREFast, true) }}:
-            enabled: false
-          ${{ if eq(parameters.enablePREFast, true) }}:
-            enabled: true
-          # ToDo: set the following to true once pre-existing errors are resolved.
-          break: false
           # alam start
+          #${{ if ne(parameters.enablePREFast, true) }}:
+          #  enabled: false
+          #${{ if eq(parameters.enablePREFast, true) }}:
+          #  enabled: true
+          # ToDo: set the following to true once pre-existing errors are resolved.
+          # break: false
           #rulesetName: Required
-          rulesetName: Recommended
-          excludedPath: 'test;installer\test;dev\MRTCore\mrt\Core\unittests;dev\MRTCore\mrt\mrm\UnitTests'
-          # alam end
+          #rulesetName: Recommended
+          #excludedPath: 'test;installer\test;dev\MRTCore\mrt\Core\unittests;dev\MRTCore\mrt\mrm\UnitTests'
+          enabled: false
         # The following scans we already did during in the SourceAnalysis job, not repeating here.
         # ToDo: Consider disabling Antimalware also, but how?
-        credscan:
-          enabled: false
-        policheck:
-          enabled: false
+        #credscan:
+        #  enabled: false
+        #policheck:
+        #  enabled: false
+        # alam end
