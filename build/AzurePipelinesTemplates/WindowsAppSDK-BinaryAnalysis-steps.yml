@@ -13,28 +13,6 @@ steps:
     inputs:
       versionSpec: '>=8.6.0'
 
-  # alam start
-  - ${{ if eq(parameters.enablePREFast, true) }}:
-    - task: SDLNativeRules@3
-      displayName: 'Guardian: PreFast@3'
-      env:
-        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-      continueOnError: true
-      inputs:
-        publishXML: false
-        userProvideBuildInfo: auto
-        #rulesetName: Recommended
-        #rulesetName: Required
-        # Exclude test code ATM to prioritize auto bug filing against product code.
-        excludedPaths: |
-          s\dev\MRTCore\mrt\Core\UnitTests
-          s\dev\MRTCore\mrt\mrm\UnitTests
-          s\dev\MRTCore\mrt\Microsoft.Windows.ApplicationModel.Resources\unittests
-          s\dev\MRTCore\mrt\Microsoft.Windows.ApplicationModel.Resources\UnpackagedTests
-          s\test
-          s\installer\test
-  # alam end
-
   - template: v2/Steps/PackageES/Windows.SDL.Binary.Analysis.OS.Undocked.yml@templates_onebranch
     parameters:
       variables:
@@ -49,16 +27,13 @@ steps:
           # analyzeTargetGlob: '+:file|**\bin\**\*.dll;-:file|**\Microsoft.WindowsAppRuntime.Insights.Resource.dll'
         prefast:
           # alam start
-          #${{ if ne(parameters.enablePREFast, true) }}:
-          #  enabled: false
-          #${{ if eq(parameters.enablePREFast, true) }}:
-          #  enabled: true
+          ${{ if ne(parameters.enablePREFast, true) }}:
+            enabled: false
+          ${{ if eq(parameters.enablePREFast, true) }}:
+            enabled: true
           # ToDo: set the following to true once pre-existing errors are resolved.
           # break: false
-          #rulesetName: Required
-          #rulesetName: Recommended
-          #excludedPath: 'test;installer\test;dev\MRTCore\mrt\Core\unittests;dev\MRTCore\mrt\mrm\UnitTests'
-          enabled: false
+          #enabled: false
         # The following scans we already did during in the SourceAnalysis job, not repeating here.
         # ToDo: Consider disabling Antimalware also, but how?
         #credscan:
@@ -66,3 +41,26 @@ steps:
         #policheck:
         #  enabled: false
         # alam end
+
+  # alam start
+  - ${{ if eq(parameters.enablePREFast, true) }}:
+    - task: SDLNativeRules@3
+      displayName: 'Guardian: PreFast@3'
+      env:
+        SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+      continueOnError: true
+      inputs:
+        publishXML: false
+        userProvideBuildInfo: auto
+        #rulesetName: Recommended
+        #rulesetName: Required
+        # Exclude test code ATM to prioritize auto bug filing against product code.
+        #excludedPaths: |
+        #  s\dev\MRTCore\mrt\Core\UnitTests
+        #  s\dev\MRTCore\mrt\mrm\UnitTests
+        #  s\dev\MRTCore\mrt\Microsoft.Windows.ApplicationModel.Resources\unittests
+        #  s\dev\MRTCore\mrt\Microsoft.Windows.ApplicationModel.Resources\UnpackagedTests
+        #  s\test
+        #  s\installer\test
+        #  s\packages
+  # alam end
