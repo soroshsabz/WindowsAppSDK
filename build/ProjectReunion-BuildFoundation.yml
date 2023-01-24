@@ -131,10 +131,18 @@ jobs:
   - task: ms.vss-governance-buildtask.governance-build-task-component-detection.ComponentGovernanceComponentDetection@0
 
   - ${{ if eq(parameters.RunSDLBinaryAnalysis, 'true') }}:
-    - template: AzurePipelinesTemplates\WindowsAppSDK-BinaryAnalysis-steps.yml
+    # alam start
+    #- template: AzurePipelinesTemplates\WindowsAppSDK-BinaryAnalysis-steps.yml
+    #  parameters:
+    #    outputDirectory: BuildOutput
+    #    enablePREFast: ${{ parameters.enablePREFast }}
+    - template: AzurePipelinesTemplates\WindowsAppSDK-BuildDevProject-Steps.yml
       parameters:
-        outputDirectory: BuildOutput
+        channel: ${{ variables.channel }}
+        enableLicenseInstall: true
+        runSDLBinaryAnalysis: ${{ parameters.RunSDLBinaryAnalysis }}
         enablePREFast: ${{ parameters.enablePREFast }}
+    # alam end
 
   - ${{ if eq(parameters.GenerateSBOM, 'true') }}:
     - task: AzureArtifacts.manifest-generator-task.manifest-generator-task.ManifestGeneratorTask@0
@@ -174,6 +182,9 @@ jobs:
       arguments: -AzureBuildStep "BuildAnyCPU"
 
   - ${{ if eq(parameters.RunSDLBinaryAnalysis, 'true') }}:
+    # alam start
+    # Currently, BuildAnyCPU does not build native code, hence, skip enabling PreFast.
+    # alam end
     - template: AzurePipelinesTemplates\WindowsAppSDK-BinaryAnalysis-steps.yml
       parameters:
         outputDirectory: BuildOutput
@@ -385,12 +396,10 @@ jobs:
         }
         Write-Host "##vso[task.setvariable variable=packageVersion;]$packageVersion"
         Write-Host "##vso[task.setvariable variable=packageVersion;isOutput=true;]$packageVersion"
-
         Write-Host $packageVersion
         [xml]$publicNuspec = Get-Content -Path $(Build.SourcesDirectory)\build\NuSpecs\Microsoft.WindowsAppSDK.Foundation.nuspec
         $publicNuspec.package.metadata.version = $packageVersion
         Set-Content -Value $publicNuspec.OuterXml $(Build.SourcesDirectory)\build\NuSpecs\Microsoft.WindowsAppSDK.Foundation.nuspec
-
   - task: PowerShell@2
     name: PackNuget
     inputs:
@@ -492,7 +501,6 @@ jobs:
         downloadPath: '$(Build.artifactStagingDirectory)'
         itemPattern: |
           **/*.nupkg
-
     - ${{ if or(eq(variables['Build.Reason'], 'Schedule'), eq(parameters.PublishPackage, 'true')) }}:
       # this mysterious guid fixes the "NuGetCommand@2 is ambiguous" error :-(
       - task: 333b11bd-d341-40d9-afcf-b32d5ce6f23b@2
