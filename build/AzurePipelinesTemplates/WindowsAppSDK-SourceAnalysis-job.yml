@@ -18,7 +18,10 @@ jobs:
     parameters:
       globalsdl:
         tsa:
-          enabled: true
+          # alam start
+          # enabled: true
+          enabled: false
+          # alam end
         codeql:
           tsandjs:
             enabled: true
@@ -33,7 +36,10 @@ jobs:
             enable: true
             break: true
           policheck:       
+            # alam start
             # ToDo: Once pre-existing issues have been resolved, set break to true.
+            #enable: true
+            #break: false
             enable: true
-            break: false
-
+            break: true
+            # alam end
