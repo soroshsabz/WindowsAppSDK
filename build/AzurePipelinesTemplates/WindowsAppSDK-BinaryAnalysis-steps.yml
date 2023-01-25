@@ -55,12 +55,12 @@ steps:
         #rulesetName: Recommended
         #rulesetName: Required
         # Exclude test code ATM to prioritize auto bug filing against product code.
-        #excludedPaths: |
-        #  s\dev\MRTCore\mrt\Core\UnitTests
-        #  s\dev\MRTCore\mrt\mrm\UnitTests
-        #  s\dev\MRTCore\mrt\Microsoft.Windows.ApplicationModel.Resources\unittests
-        #  s\dev\MRTCore\mrt\Microsoft.Windows.ApplicationModel.Resources\UnpackagedTests
-        #  s\test
-        #  s\installer\test
-        #  s\packages
+        excludedPaths: |
+          s\dev\MRTCore\mrt\Core\UnitTests#
+          s\dev\MRTCore\mrt\mrm\UnitTests#
+          s\dev\MRTCore\mrt\Microsoft.Windows.ApplicationModel.Resources\unittests#
+          s\dev\MRTCore\mrt\Microsoft.Windows.ApplicationModel.Resources\UnpackagedTests#
+          s\test#
+          s\installer\test#
+          s\packages
   # alam end
