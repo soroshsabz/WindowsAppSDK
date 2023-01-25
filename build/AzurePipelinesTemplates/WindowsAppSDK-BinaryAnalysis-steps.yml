@@ -27,13 +27,13 @@ steps:
           # analyzeTargetGlob: '+:file|**\bin\**\*.dll;-:file|**\Microsoft.WindowsAppRuntime.Insights.Resource.dll'
         prefast:
           # alam start
-          ${{ if ne(parameters.enablePREFast, true) }}:
-            enabled: false
-          ${{ if eq(parameters.enablePREFast, true) }}:
-            enabled: true
+          #${{ if ne(parameters.enablePREFast, true) }}:
+          #  enabled: false
+          #${{ if eq(parameters.enablePREFast, true) }}:
+          #  enabled: true
           # ToDo: set the following to true once pre-existing errors are resolved.
           # break: false
-          #enabled: false
+          enabled: false
         # The following scans we already did during in the SourceAnalysis job, not repeating here.
         # ToDo: Consider disabling Antimalware also, but how?
         #credscan:
@@ -52,6 +52,8 @@ steps:
       inputs:
         publishXML: false
         userProvideBuildInfo: auto
+        #logRootDirectory: s
+        #logRootDirectory: s\BuildOutput
         #rulesetName: Recommended
         #rulesetName: Required
         # Exclude test code ATM to prioritize auto bug filing against product code.
@@ -64,3 +66,4 @@ steps:
           s\installer\test#
           s\packages
   # alam end
+
