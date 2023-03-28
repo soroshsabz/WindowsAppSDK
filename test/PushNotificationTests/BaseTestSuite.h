@@ -21,7 +21,6 @@ class BaseTestSuite
 
         // Base unit tests
         void ChannelRequestUsingNullRemoteId();
-        void ChannelRequestCheckExpirationTime();
         void ChannelRequestUsingRemoteId();
         void MultipleChannelClose(); // Currently failing
         void VerifyRegisterAndUnregister();

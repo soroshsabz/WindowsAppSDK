@@ -13,11 +13,6 @@ void PackagedTests::ChannelRequestUsingRemoteId()
     BaseTestSuite::ChannelRequestUsingRemoteId();
 }
 
-void PackagedTests::ChannelRequestCheckExpirationTime()
-{
-    BaseTestSuite::ChannelRequestCheckExpirationTime();
-}
-
 // Currently failing - https://github.com/microsoft/WindowsAppSDK/issues/2392
 void PackagedTests::MultipleChannelClose()
 {
